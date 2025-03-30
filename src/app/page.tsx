@@ -6,11 +6,7 @@ import RightColumn from "./components/RightColumn";
 
 export default function Home() {
   const [candles, setCandles] = useState([]);
-  const [galleryImages, setGalleryImages] = useState([]);
   const [activeTab, setActiveTab] = useState<"candles" | "gallery" | "funeral" | "lightCandle">("lightCandle");
-  const [newCandleName, setNewCandleName] = useState("");
-  const [newCandleComment, setNewCandleComment] = useState("");
-  const [newCandleImage, setNewCandleImage] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [dialogImage, setDialogImage] = useState<string | null>(null);
   const [carouselIndex, setCarouselIndex] = useState<number | null>(null);
@@ -51,54 +47,10 @@ export default function Home() {
     fetchGalleryImages();
   }, []);
 
-  const handleLightCandle = async () => {
-    if (!newCandleName.trim()) {
-      setError("Name is required to light a candle");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("name", newCandleName);
-    if (newCandleComment) formData.append("comment", newCandleComment);
-    if (newCandleImage) formData.append("image", newCandleImage);
-
-    try {
-      const response = await fetch("/api/candles", {
-        method: "POST",
-        body: formData,
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to light candle");
-      }
-      const data = await response.json();
-
-      const updatedResponse = await fetch("/api/candles");
-      if (!updatedResponse.ok) throw new Error("Failed to fetch updated candles");
-      const updatedData = await updatedResponse.json();
-
-      setCandles(updatedData.candles);
-      setNewCandleName("");
-      setNewCandleComment("");
-      setNewCandleImage(null);
-    } catch (err) {
-      console.error(err);
-      setError(err.message || "Failed to light candle");
-    }
-  };
-
   return (
     <div className="app-container text-gray-800">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 auto-rows-min">
-        <LeftColumn
-          newCandleName={newCandleName}
-          setNewCandleName={setNewCandleName}
-          newCandleComment={newCandleComment}
-          setNewCandleComment={setNewCandleComment}
-          newCandleImage={newCandleImage}
-          setNewCandleImage={setNewCandleImage}
-          handleLightCandle={handleLightCandle}
-        />
+        <LeftColumn />
         <RightColumn
           activeTab={activeTab}
           setActiveTab={setActiveTab}
