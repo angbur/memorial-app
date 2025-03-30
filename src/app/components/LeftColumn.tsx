@@ -20,11 +20,11 @@ type Texts = {
 const classes: Classes = {
   container: "flex flex-col items-center justify-center p-6 w-full",
   imageWrapper: "w-full overflow-hidden rounded-lg justify-center flex items-center",
-  image: "object-cover rounded-lg shadow-md w-full max-w-xs max-h-[200px] sm:max-h-none image",
+  image: "object-cover rounded-lg shadow-md w-full max-w-xs max-h-[180px] sm:max-h-none image",
   textSection: "mt-6 text-center p-10 rounded-lg font-['EB_Garamond']",
   name: "text-4xl font-semibold",
   dates: "text-2xl mb-4",
-  description: "text-lg",
+  description: "text-sm text-gray-700",
 };
 
 const texts: Texts = {
@@ -41,10 +41,10 @@ export default function LeftColumn() {
         <Image
           src="/grandma.png"
           alt={`Zdjęcie ${texts.name}`}
-          width={280}
-          height={230}
+          width={200}
+          height={200}
           className={classes.image}
-          style={{ minHeight: "300px", minWidth: "200px" }}
+          style={{ minHeight: "200px", minWidth: "200px" }}
         />
       </div>
       <div

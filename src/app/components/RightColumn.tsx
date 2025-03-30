@@ -1,4 +1,3 @@
-/* eslint-disable */
 'use client';
 import TabButtons from "./TabButtons";
 import MemoryWall from "./MemoryWall";
@@ -9,16 +8,24 @@ import LightCandleForm from "./LightCandleForm";
 import { useState, useCallback, useEffect } from "react";
 
 interface RightColumnProps {
-  readonly activeTab: string;
-  readonly setActiveTab: (tab: string) => void;
+  readonly activeTab: "candles" | "gallery" | "funeral" | "lightCandle";
+  readonly setActiveTab: (tab: "candles" | "gallery" | "funeral" | "lightCandle") => void;
   readonly error: string | null;
   readonly dialogImage: string | null;
   readonly setDialogImage: (image: string | null) => void;
-  readonly galleryImages: ReadonlyArray<{ original: string; thumbnail: string; description: string }>;
-  readonly carouselIndex: number;
-  readonly setCarouselIndex: (index: number) => void;
-  readonly openPanel: boolean;
-  readonly setOpenPanel: (open: boolean) => void;
+  readonly carouselIndex: number | null;
+  readonly setCarouselIndex: (index: number | null) => void;
+}
+
+interface Candle {
+  name: string;
+  comment?: string;
+  images?: string[];
+}
+
+interface Comment {
+  text?: string;
+  images: string[];
 }
 
 export default function RightColumn({
@@ -27,11 +34,8 @@ export default function RightColumn({
   error,
   dialogImage,
   setDialogImage,
-  galleryImages,
   carouselIndex,
   setCarouselIndex,
-  openPanel,
-  setOpenPanel,
 }: RightColumnProps) {
   const [memoryWallCandles, setMemoryWallCandles] = useState([]);
 
@@ -63,16 +67,16 @@ export default function RightColumn({
         const commentsData = await commentsResponse.json();
 
         const candleImages = candlesData.candles
-          .filter((candle) => candle.images?.length)
-          .flatMap((candle) =>
-            candle.images.map((image) => ({
+          .filter((candle: Candle) => candle.images?.length)
+          .flatMap((candle: Candle) =>
+            candle.images!.map((image) => ({
               original: image,
               thumbnail: image,
               description: `${candle.name}: ${candle.comment || "No comment"}`,
             }))
           );
 
-        const commentImages = commentsData.comments.flatMap((comment) =>
+        const commentImages = commentsData.comments.flatMap((comment: Comment) =>
           comment.images.map((image) => ({
             original: image,
             thumbnail: image,
@@ -80,7 +84,6 @@ export default function RightColumn({
           }))
         );
 
-        setGalleryImages([...candleImages, ...commentImages]);
       } catch (error) {
         console.error("Error fetching gallery images:", error);
       }
@@ -128,16 +131,15 @@ export default function RightColumn({
       )}
       {activeTab === "gallery" && (
         <Gallery
-          galleryImages={galleryImages}
           error={error}
           carouselIndex={carouselIndex}
-          setCarouselIndex={setCarouselIndex}
+          setCarouselIndex={setCarouselIndex ?? 0}
           dialogImage={dialogImage}
           setDialogImage={setDialogImage}
         />
       )}
       {activeTab === "funeral" && (
-        <FuneralInfo openPanel={openPanel} setOpenPanel={setOpenPanel} />
+        <FuneralInfo/>
       )}
     </div>
   );

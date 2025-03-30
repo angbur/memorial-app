@@ -1,11 +1,16 @@
-/* eslint-disable */
 import { MongoClient } from "mongodb";
 
-const uri = process.env.MONGODB_URI; // Ensure this reads the correct value from .env.local
+const uri = process.env.MONGODB_URI;
 const options = {};
 
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
+
+declare global {
+  // Add type definition for global._mongoClientPromise
+  // eslint-disable-next-line no-var
+  var _mongoClientPromise: Promise<MongoClient> | undefined;
+}
 
 if (!uri) {
   throw new Error("Please add your MongoDB URI to .env.local");

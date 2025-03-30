@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const result = await candlesCollection.updateOne(
         { _id: new ObjectId(candleId) },
-        { $push: { images: { $each: images } } }
+        { $push: { images: { $each: images } } } as any
       );
 
       if (result.modifiedCount === 0) {

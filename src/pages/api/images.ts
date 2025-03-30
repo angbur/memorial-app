@@ -23,7 +23,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: "Invalid request. Candle ID and images are required." });
       }
 
-      // Validate Base64 image format
       for (const image of images) {
         if (!image.startsWith("data:image/")) {
           return res.status(400).json({ error: "Invalid image format" });
@@ -33,7 +32,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       }
 
-      // Insert images into the `images` collection
       const imageDocuments = images.map((image) => ({
         candleId: new ObjectId(candleId),
         image,
@@ -48,7 +46,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       res.status(200).json({ message: "Images uploaded successfully" });
     } else if (req.method === "GET") {
-      // Fetch all images
       const images = await imagesCollection.find({}).toArray();
       res.status(200).json({
         images: images.map((img) => ({

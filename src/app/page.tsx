@@ -1,4 +1,3 @@
-/* eslint-disable */
 'use client';
 import { useState, useEffect } from "react";
 import LeftColumn from "./components/LeftColumn";
@@ -36,7 +35,6 @@ export default function Home() {
           .filter((candle: { images?: string[] }) => candle.images?.length)
           .flatMap((candle: { images: string[] }) => candle.images);
 
-        setGalleryImages(candleImages);
       } catch (err) {
         console.error(err);
         setError("Failed to load gallery images");
@@ -54,14 +52,11 @@ export default function Home() {
         <RightColumn
           activeTab={activeTab}
           setActiveTab={setActiveTab}
-          candles={candles}
           error={error}
           dialogImage={dialogImage}
           setDialogImage={setDialogImage}
           carouselIndex={carouselIndex}
           setCarouselIndex={setCarouselIndex}
-          openPanel={openPanel}
-          setOpenPanel={setOpenPanel}
         />
       </div>
     </div>
