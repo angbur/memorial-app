@@ -32,6 +32,15 @@ const texts = {
   imageSizeError: "Rozmiar zdjęcia nie może przekraczać 8MB.",
   submitButton: "Wyślij",
   introMessage: "To jest miejsce, w którym możesz uczcić pamięć Marysi i podzielić się wspomnieniami.",
+  thankYouTitle: "Dziękujemy!",
+  nameLabel: "Twoje imię",
+  nameLabelRequired: "Twoje imię *",
+  passwordLabel: "Miesiąc urodzin Marysi (dla weryfikacji)",
+  passwordLabelRequired: "Miesiąc urodzin Marysi (dla weryfikacji) *",
+  commentPlaceholder: "Komentarz, np. wspomnienie, historia związana z Marysią lub coś, co chciałbyś/chciałabyś przekazać.",
+  fileInputLabel: "Jeżeli chcesz, możesz tutaj dodać zdjęcie Marysi z młodości lub inne, które chciałbyś/chciałabyś udostępnić w galerii.",
+  uploadedImageAlt: "Uploaded",
+  errorLightingCandle: "Wystąpił błąd podczas zapalania świeczki.",
 };
 
 type LightCandleFormProps = {
@@ -121,7 +130,7 @@ export default function LightCandleForm({ refreshMemoryWall }: LightCandleFormPr
       setShowThankYou(true);
     } catch (error) {
       console.error("Error lighting candle:", error);
-      setErrorMessage("Wystąpił błąd podczas zapalania świeczki.");
+      setErrorMessage(texts.errorLightingCandle);
     } finally {
       setLoading(false);
     }
@@ -151,7 +160,7 @@ export default function LightCandleForm({ refreshMemoryWall }: LightCandleFormPr
               width={200} 
             />
           </div>
-          <h2 className="text-2xl font-bold mb-4 text-gray-700">Dziękujemy!</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-700">{texts.thankYouTitle}</h2>
           <p className={classes.thankYouMessage}>
             Dziękujemy za zapalenie świeczki. Zdjęcia przesłane przez innych użytkowników znajdziesz w galerii, 
             a informacje o uroczystościach pogrzebowych w zakładce Uroczystości.
@@ -170,7 +179,7 @@ export default function LightCandleForm({ refreshMemoryWall }: LightCandleFormPr
           <p className="text-gray-600 mb-4">{texts.introMessage}</p>
           {errorMessage && <p className={classes.errorMessage}>{errorMessage}</p>}
           <label className="block text-gray-700 font-medium mb-2">
-            Twoje imię <span className="text-red-500">*</span>
+            {texts.nameLabel} <span className="text-red-500">*</span>
           </label>
           <input
             className={`${classes.input} ${nameInputError ? 'border-red-500 focus:ring-red-400' : ''}`}
@@ -185,7 +194,7 @@ export default function LightCandleForm({ refreshMemoryWall }: LightCandleFormPr
             }}
           />
           <label className="block text-gray-700 font-medium mb-2">
-            Miesiąc urodzin Marysi (dla weryfikacji) <span className="text-red-500">*</span>
+            {texts.passwordLabel} <span className="text-red-500">*</span>
           </label>
           <input
             type="password"
@@ -202,14 +211,14 @@ export default function LightCandleForm({ refreshMemoryWall }: LightCandleFormPr
           />
           <textarea
             className={classes.textarea}
-            placeholder="Opcjonalny komentarz, np. wspomnienie, historia związana z Marysią lub coś, co chciałbyś/chciałabyś przekazać."
+            placeholder={texts.commentPlaceholder}
             style={{ height: "100px" }}
             value={localCandleComment}
             onChange={handleCommentChange}
           />
           <div className={classes.fileInputWrapper}>
             <label className={classes.fileInputLabel}>
-              Jeżeli chcesz, możesz tutaj dodać zdjęcie Marysi z młodości lub inne, które chciałbyś/chciałabyś udostępnić w galerii.
+              {texts.fileInputLabel}
             </label>
             <input
               type="file"
@@ -225,7 +234,7 @@ export default function LightCandleForm({ refreshMemoryWall }: LightCandleFormPr
                   <img
                     key={index}
                     src={src}
-                    alt={`Uploaded ${index + 1}`}
+                    alt={`${texts.uploadedImageAlt} ${index + 1}`}
                     className="uploaded-image w-30 h-30 mb-4 object-cover rounded-md border border-gray-300"
                   />
                 ) : null
