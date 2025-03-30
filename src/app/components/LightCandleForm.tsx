@@ -45,9 +45,10 @@ const texts = {
 
 type LightCandleFormProps = {
   refreshMemoryWall: () => Promise<void>;
+  setActiveTab: (tab: "candles" | "gallery" | "funeral" | "lightCandle") => void;
 };
 
-export default function LightCandleForm({ refreshMemoryWall }: LightCandleFormProps) {
+export default function LightCandleForm({ refreshMemoryWall, setActiveTab }: LightCandleFormProps) {
   const [loading, setLoading] = useState(false);
   const [localCandleName, setLocalCandleName] = useState('');
   const [localCandleComment, setLocalCandleComment] = useState('');
@@ -144,6 +145,10 @@ export default function LightCandleForm({ refreshMemoryWall }: LightCandleFormPr
     setShowThankYou(false);
   };
 
+  const handleGoToMemoryWall = () => {
+    setActiveTab("candles"); // Ensure this is called in response to a user action
+  };
+
   return (
     <div className={classes.container}>
       {showThankYou ? (
@@ -165,13 +170,22 @@ export default function LightCandleForm({ refreshMemoryWall }: LightCandleFormPr
             Dziękujemy za zapalenie świeczki. Zdjęcia przesłane przez innych użytkowników znajdziesz w galerii, 
             a informacje o uroczystościach pogrzebowych w zakładce Uroczystości.
           </p>
-          <button
-            className={classes.thankYouButton}
-            style={{ backgroundColor: "#434c5e", color: "rgb(236, 224, 207)" }}
-            onClick={resetForm}
-          >
-            {texts.lightAnotherCandle}
-          </button>
+          <div className="flex flex-col gap-4">
+            <button
+              className={`${classes.thankYouButton} border border-gray-400`}
+              style={{ backgroundColor: "transparent", color: "rgb(67, 76, 94)" }}
+              onClick={resetForm}
+            >
+              {texts.lightAnotherCandle}
+            </button>
+            <button
+              className={`${classes.thankYouButton}`}
+              style={{ backgroundColor: "#2d3748", color: "white" }}
+              onClick={handleGoToMemoryWall} // Use the handler here
+            >
+              Przejdź do tablicy pamięci
+            </button>
+          </div>
         </div>
       ) : (
         <>
