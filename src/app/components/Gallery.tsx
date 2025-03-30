@@ -44,7 +44,7 @@ export default function Gallery({
         <div
           className="grid gap-4 mt-4"
           style={{
-            gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
           }}
         >
           {galleryImages.map((image, index) => (
@@ -92,7 +92,7 @@ export default function Gallery({
       <style jsx>{`
         @media (max-width: 640px) {
           .grid {
-            grid-template-columns: 1fr !important;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
           }
         }
       `}</style>

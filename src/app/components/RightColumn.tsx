@@ -112,7 +112,7 @@ export default function RightColumn({
       <TabButtons activeTab={activeTab} setActiveTab={setActiveTab} />
       {activeTab === "lightCandle" && (
         <LightCandleForm
-          refreshMemoryWall={refreshMemoryWall}
+          refreshMemoryWall={refreshMemoryWall} // Pass refresh function to LightCandleForm
         />
       )}
       {activeTab === "candles" && (
