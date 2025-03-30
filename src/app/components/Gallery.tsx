@@ -71,14 +71,14 @@ export default function Gallery({
         body: JSON.stringify({ id }),
       });
       if (!response.ok) throw new Error("Failed to delete image");
-      setGalleryImages((prev) => prev.filter((img) => prev.id !== id));
+      setGalleryImages((prev) => prev.filter((img) => img.id !== id));
     } catch (err) {
       console.error("Error deleting image:", err);
     }
   };
 
   useEffect(() => {
-    fetchImages(currentPage); // Fetch images for the current page on component mount
+    fetchImages(currentPage);
   }, [currentPage]);
 
   return (
@@ -110,12 +110,14 @@ export default function Gallery({
                     className="object-cover w-full h-full"
                   />
                 </div>
-                <button
-                  onClick={() => handleDeleteImage(image.id)}
-                  className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-sm"
-                >
-                  Usuń
-                </button>
+                {process.env.NODE_ENV === "development" && (
+                  <button
+                    onClick={() => handleDeleteImage(image.id)}
+                    className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-sm"
+                  >
+                    Usuń
+                  </button>
+                )}
               </div>
             ))}
           </div>
