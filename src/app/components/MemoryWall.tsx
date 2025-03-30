@@ -47,7 +47,6 @@ export default function MemoryWall({
     }
   };
 
-  const [isLoading, setIsLoading] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
@@ -55,12 +54,6 @@ export default function MemoryWall({
       setIsFetching(true);
     } else {
       setIsFetching(false);
-    }
-  }, [candles, error]);
-
-  useEffect(() => {
-    if (candles.length > 0 || error) {
-      setIsLoading(false);
     }
   }, [candles, error]);
 
