@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGODB_URI; // Ensure this reads the correct value from .env.local

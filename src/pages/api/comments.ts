@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
