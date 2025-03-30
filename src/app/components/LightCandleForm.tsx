@@ -20,6 +20,7 @@ const classes = {
   button: "px-4 py-2 rounded-md transition flex items-center justify-center",
   thankYouButton: "px-4 py-2 rounded-md transition",
   loadingSpinner: "animate-spin h-5 w-5 text-white",
+  password: "w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-400",
 };
 
 const texts = {
@@ -27,6 +28,7 @@ const texts = {
   lightAnotherCandle: "Zapal jeszcze jedną świeczkę",
   lightCandleTitle: "Zapal świeczkę",
   nameRequiredError: "Imię jest wymagane, aby zapalić świeczkę.",
+  passwordRequiredError: "Podanie poprawnego miesiąca urodzin Marysi jest wymagane.",
   imageSizeError: "Rozmiar zdjęcia nie może przekraczać 8MB.",
   submitButton: "Wyślij",
   introMessage: "To jest miejsce, w którym możesz uczcić pamięć Marysi i podzielić się wspomnieniami.",
@@ -44,6 +46,8 @@ export default function LightCandleForm({ refreshMemoryWall }: LightCandleFormPr
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showThankYou, setShowThankYou] = useState(false);
   const [nameInputError, setNameInputError] = useState(false);
+  const [localPassword, setLocalPassword] = useState('');
+  const [passwordInputError, setPasswordInputError] = useState(false);
 
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -90,6 +94,14 @@ export default function LightCandleForm({ refreshMemoryWall }: LightCandleFormPr
       setErrorMessage(texts.nameRequiredError);
       return;
     }
+
+    if (localPassword.trim().toLowerCase() !== "sierpień") {
+      setErrorMessage(texts.passwordRequiredError);
+      setPasswordInputError(true);
+      return;
+    }
+
+    setPasswordInputError(false);
 
     setLoading(true);
     try {
@@ -180,10 +192,26 @@ export default function LightCandleForm({ refreshMemoryWall }: LightCandleFormPr
               }
             }}
           />
+          <label className="block text-gray-700 font-medium mb-2">
+            Miesiąc urodzin Marysi (dla weryfikacji) <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="password"
+            className={`${classes.password} ${passwordInputError ? 'border-red-500 focus:ring-red-400' : ''}`}
+            placeholder="Podaj miesiąc urodzin Marysi"
+            value={localPassword}
+            onChange={(e) => {
+              setLocalPassword(e.target.value);
+              if (e.target.value.trim().toLowerCase() === "maj") {
+                setPasswordInputError(false);
+                setErrorMessage(null);
+              }
+            }}
+          />
           <textarea
             className={classes.textarea}
             placeholder="Opcjonalny komentarz, np. wspomnienie, historia związana z Marysią lub coś, co chciałbyś/chciałabyś przekazać."
-            style={{ height: "150px" }}
+            style={{ height: "100px" }}
             value={localCandleComment}
             onChange={handleCommentChange}
           />
