@@ -57,32 +57,10 @@ export default function RightColumn({
 
     const fetchGalleryImages = async () => {
       try {
-        const [candlesResponse, commentsResponse] = await Promise.all([
+        const [candlesResponse] = await Promise.all([
           fetch("/api/candles"),
-          fetch("/api/comments"),
         ]);
-        if (!candlesResponse.ok || !commentsResponse.ok) throw new Error("Failed to fetch gallery images");
-
-        const candlesData = await candlesResponse.json();
-        const commentsData = await commentsResponse.json();
-
-        const candleImages = candlesData.candles
-          .filter((candle: Candle) => candle.images?.length)
-          .flatMap((candle: Candle) =>
-            candle.images!.map((image) => ({
-              original: image,
-              thumbnail: image,
-              description: `${candle.name}: ${candle.comment || "No comment"}`,
-            }))
-          );
-
-        const commentImages = commentsData.comments.flatMap((comment: Comment) =>
-          comment.images.map((image) => ({
-            original: image,
-            thumbnail: image,
-            description: `Anonymous: ${comment.text || "No comment"}`,
-          }))
-        );
+        if (!candlesResponse.ok) throw new Error("Failed to fetch gallery images");
 
       } catch (error) {
         console.error("Error fetching gallery images:", error);
@@ -112,7 +90,7 @@ export default function RightColumn({
       <TabButtons activeTab={activeTab} setActiveTab={setActiveTab} />
       {activeTab === "lightCandle" && (
         <LightCandleForm
-          refreshMemoryWall={refreshMemoryWall} // Pass refresh function to LightCandleForm
+          refreshMemoryWall={refreshMemoryWall}
         />
       )}
       {activeTab === "candles" && (
