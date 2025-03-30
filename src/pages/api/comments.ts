@@ -1,26 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
-import multer from "multer";
-import { IncomingMessage, ServerResponse } from "http";
-
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: "./public/uploads",
-    filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
-  }),
-});
-
-const uploadMiddleware = upload.array("images", 5);
-const runMiddleware = (req: IncomingMessage, res: ServerResponse, fn: Function) =>
-  new Promise((resolve, reject) => {
-    fn(req, res, (result: any) => {
-      if (result instanceof Error) {
-        return reject(result);
-      }
-      return resolve(result);
-    });
-  });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -42,16 +22,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })),
       });
     } else if (req.method === "POST") {
-      await runMiddleware(req, res, uploadMiddleware);
-
-      const { text, commentId, name } = req.body;
-      const images = (req as any).files
-        ? (req as any).files.map((file: any) => `/uploads/${file.filename}`)
-        : [];
+      const { text, images, commentId, name } = req.body;
 
       if (text) {
-        // Add a new comment with optional images
-        await commentsCollection.insertOne({ text, images, candles: [] });
+        await commentsCollection.insertOne({ text, images: images || [], candles: [] });
         const comments = await commentsCollection.find({}).toArray();
         res.status(201).json({
           comments: comments.map((c) => ({
@@ -88,9 +62,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};

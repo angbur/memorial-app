@@ -4,9 +4,7 @@ import Image from "next/image";
 export default function Gallery({
   error,
   carouselIndex,
-  setCarouselIndex,
-  dialogImage,
-  setDialogImage,
+  setCarouselIndex
 }: {
   error: string | null;
   carouselIndex: number | null;

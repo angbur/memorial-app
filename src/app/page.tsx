@@ -1,10 +1,7 @@
 'use client';
 import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
 import LeftColumn from "./components/LeftColumn";
 import RightColumn from "./components/RightColumn";
-
-const Lottie = dynamic(() => import("react-lottie"), { ssr: false });
 
 export default function Home() {
   const [candles, setCandles] = useState([]);
