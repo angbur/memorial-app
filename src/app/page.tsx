@@ -24,26 +24,25 @@ export default function Home() {
       }
     };
 
+    fetchCandles();
+  }, []);
+
+  useEffect(() => {
     const fetchGalleryImages = async () => {
-      try {
-        const response = await fetch("/api/candles");
-        if (!response.ok) throw new Error("Failed to fetch gallery images");
-
-        const candlesData = await response.json();
-
-        const candleImages = candlesData.candles
-          .filter((candle: { images?: string[] }) => candle.images?.length)
-          .flatMap((candle: { images: string[] }) => candle.images);
-
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load gallery images");
+      if (activeTab === "gallery") {
+        try {
+          const response = await fetch("/api/images");
+          if (!response.ok) throw new Error("Failed to fetch gallery images");
+          const data = await response.json();
+          console.log("Gallery images fetched:", data.images);
+        } catch (err) {
+          console.error(err);
+        }
       }
     };
 
-    fetchCandles();
     fetchGalleryImages();
-  }, []);
+  }, [activeTab]);
 
   return (
     <div className="app-container text-gray-800">
