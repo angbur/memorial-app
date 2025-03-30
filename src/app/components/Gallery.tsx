@@ -4,7 +4,9 @@ import Image from "next/image";
 export default function Gallery({
   error,
   carouselIndex,
-  setCarouselIndex
+  setCarouselIndex,
+  dialogImage,
+  setDialogImage,
 }: {
   error: string | null;
   carouselIndex: number | null;
@@ -12,56 +14,72 @@ export default function Gallery({
   dialogImage: string | null;
   setDialogImage: (image: string | null) => void;
 }) {
-  const [galleryImages, setGalleryImages] = useState<string[]>([]);
+  const [galleryImages, setGalleryImages] = useState<{ id: string; image: string }[]>([]);
   const [loading, setLoading] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const imagesPerPage = 6;
+  const imagesPerPage = 6; // Always use a page size of 6
   const listRef = useRef<HTMLDivElement | null>(null);
 
-  const indexOfLastImage = currentPage * imagesPerPage;
-  const indexOfFirstImage = indexOfLastImage - imagesPerPage;
-  const currentImages = galleryImages.slice(indexOfFirstImage, indexOfLastImage);
-
-  const totalPages = Math.ceil(galleryImages.length / imagesPerPage);
+  const [totalPages, setTotalPages] = useState(0);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    listRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    fetchImages(page); // Fetch images for the selected page
   };
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-      listRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+      const previousPage = currentPage - 1;
+      setCurrentPage(previousPage);
+      fetchImages(previousPage); // Fetch images for the previous page
     }
   };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-      listRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+      const nextPage = currentPage + 1;
+      setCurrentPage(nextPage);
+      fetchImages(nextPage); // Fetch images for the next page
+    }
+  };
+
+  const fetchImages = async (page = 1) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/images?page=${page}&limit=${imagesPerPage}`);
+      if (!response.ok) throw new Error("Failed to fetch images");
+      const data = await response.json();
+
+      setGalleryImages(data.images.map((img: { id: string; image: string }) => ({
+        id: img.id,
+        image: img.image,
+      })));
+      setTotalPages(data.pagination.totalPages); // Update totalPages from the backend
+    } catch (err) {
+      console.error("Error fetching gallery images:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteImage = async (id: string) => {
+    try {
+      const response = await fetch("/api/images", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (!response.ok) throw new Error("Failed to delete image");
+      setGalleryImages((prev) => prev.filter((img) => prev.id !== id));
+    } catch (err) {
+      console.error("Error deleting image:", err);
     }
   };
 
   useEffect(() => {
-    const fetchImages = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch("/api/images");
-        if (!response.ok) throw new Error("Failed to fetch images");
-        const data = await response.json();
-
-        setGalleryImages(data.images.map((img: { image: string }) => img.image));
-      } catch (err) {
-        console.error("Error fetching gallery images:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchImages();
-  }, []);
+    fetchImages(currentPage); // Fetch images for the current page on component mount
+  }, [currentPage]);
 
   return (
     <div className="mb-10">
@@ -69,7 +87,7 @@ export default function Gallery({
       {error && <p className="text-red-500 mt-2">{error}</p>}
       {loading ? (
         <p className="text-gray-500 mb-20">Ładowanie zdjęć...</p>
-      ) : currentImages.length > 0 ? (
+      ) : galleryImages.length > 0 ? (
         <>
           <div
             ref={listRef}
@@ -78,21 +96,26 @@ export default function Gallery({
               gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
             }}
           >
-            {currentImages.map((image, index) => (
-              <div
-                key={index}
-                className="cursor-pointer"
-                onClick={() => setCarouselIndex(index + indexOfFirstImage)}
-              >
-                <div className="w-full h-60 overflow-hidden rounded-lg shadow-md">
+            {galleryImages.map((image, index) => (
+              <div key={image.id} className="relative cursor-pointer">
+                <div
+                  className="w-full h-60 overflow-hidden rounded-lg shadow-md"
+                  onClick={() => setCarouselIndex(index + (currentPage - 1) * imagesPerPage)}
+                >
                   <Image
-                    src={image}
+                    src={image.image}
                     alt={`Zdjęcie ${index + 1}`}
                     width={100}
                     height={100}
                     className="object-cover w-full h-full"
                   />
                 </div>
+                <button
+                  onClick={() => handleDeleteImage(image.id)}
+                  className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-sm"
+                >
+                  Usuń
+                </button>
               </div>
             ))}
           </div>
@@ -104,7 +127,7 @@ export default function Gallery({
             >
               &lt;
             </button>
-            {Array.from({ length: totalPages }, (_, index) => (
+            {Array.from({ length: totalPages }, (_, index) => ( // Use totalPages for pagination
               <button
                 key={index}
                 onClick={() => handlePageChange(index + 1)}
@@ -140,7 +163,7 @@ export default function Gallery({
             </button>
             {galleryImages[carouselIndex] && (
               <Image
-                src={galleryImages[carouselIndex]}
+                src={galleryImages[carouselIndex].image}
                 alt={`Zdjęcie ${carouselIndex + 1}`}
                 width={800}
                 height={800}
