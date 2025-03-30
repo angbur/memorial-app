@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
 export default function Gallery({
@@ -14,6 +14,35 @@ export default function Gallery({
 }) {
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const imagesPerPage = 6;
+  const listRef = useRef<HTMLDivElement | null>(null);
+
+  const indexOfLastImage = currentPage * imagesPerPage;
+  const indexOfFirstImage = indexOfLastImage - imagesPerPage;
+  const currentImages = galleryImages.slice(indexOfFirstImage, indexOfLastImage);
+
+  const totalPages = Math.ceil(galleryImages.length / imagesPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    listRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      listRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      listRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -40,31 +69,63 @@ export default function Gallery({
       {error && <p className="text-red-500 mt-2">{error}</p>}
       {loading ? (
         <p className="text-gray-500 mb-20">Ładowanie zdjęć...</p>
-      ) : galleryImages.length > 0 ? (
-        <div
-          className="grid gap-4 mt-4"
-          style={{
-            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-          }}
-        >
-          {galleryImages.map((image, index) => (
-            <div
-              key={index}
-              className="cursor-pointer"
-              onClick={() => setCarouselIndex(index)}
-            >
-              <div className="w-full h-60 overflow-hidden rounded-lg shadow-md">
-                <Image
-                  src={image}
-                  alt={`Zdjęcie ${index + 1}`}
-                  width={100}
-                  height={100}
-                  className="object-cover w-full h-full"
-                />
+      ) : currentImages.length > 0 ? (
+        <>
+          <div
+            ref={listRef}
+            className="grid gap-4 mt-4"
+            style={{
+              gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+            }}
+          >
+            {currentImages.map((image, index) => (
+              <div
+                key={index}
+                className="cursor-pointer"
+                onClick={() => setCarouselIndex(index + indexOfFirstImage)}
+              >
+                <div className="w-full h-60 overflow-hidden rounded-lg shadow-md">
+                  <Image
+                    src={image}
+                    alt={`Zdjęcie ${index + 1}`}
+                    width={100}
+                    height={100}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+          <div className="flex justify-center items-center mt-4 mb-10 space-x-2">
+            <button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+              className="p-2 rounded bg-gray-100 disabled:opacity-50"
+            >
+              &lt;
+            </button>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index}
+                onClick={() => handlePageChange(index + 1)}
+                className={`px-4 py-2 rounded ${
+                  currentPage === index + 1
+                    ? "bg-gray-400 text-white"
+                    : "bg-gray-200"
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className="p-2 rounded bg-gray-100 disabled:opacity-50"
+            >
+              &gt;
+            </button>
+          </div>
+        </>
       ) : (
         <p className="text-gray-500">Brak zdjęć w galerii.</p>
       )}

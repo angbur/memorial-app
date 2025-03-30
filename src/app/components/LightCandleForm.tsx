@@ -51,30 +51,22 @@ export default function LightCandleForm({ refreshMemoryWall }: LightCandleFormPr
 
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files) {
-      const newImages: string[] = [];
-      let error = false;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.size > 8 * 1024 * 1024) {
+        setErrorMessage(texts.imageSizeError);
+        return;
+      }
 
-      Array.from(files).forEach((file) => {
-        if (file.size > 8 * 1024 * 1024) {
-          setErrorMessage(texts.imageSizeError);
-          error = true;
-          return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        if (result) {
+          setLocalCandleImages([result]);
+          setErrorMessage(null);
         }
-
-        const reader = new FileReader();
-        reader.onload = () => {
-          const result = reader.result as string;
-          if (result) {
-            newImages.push(result);
-          }
-          if (newImages.length === files.length && !error) {
-            setLocalCandleImages(newImages);
-            setErrorMessage(null);
-          }
-        };
-        reader.readAsDataURL(file);
-      });
+      };
+      reader.readAsDataURL(file);
     } else {
       setLocalCandleImages([]);
     }
@@ -222,7 +214,6 @@ export default function LightCandleForm({ refreshMemoryWall }: LightCandleFormPr
             <input
               type="file"
               accept="image/*"
-              multiple
               className={classes.fileInput}
               onChange={handleFileChange}
             />
