@@ -19,8 +19,8 @@ export default function FuneralInfo() {
         </div>
         <div>
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2546.366297851745!2d18.1969263762155!3d50.34107299523365!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47111182d4c7dd1d%3A0xbea1b3300a8ee310!2sParafia%20rzymskokatolicka%20%C5%9Bw.%20Eugeniusza%20de%20Mazenod!5e0!3m2!1spl!2spl!4v1743320416458!5m2!1spl!2spl"
-           width="400" 
-           height="300" 
+           width="300" 
+           height="200" 
            style={{ border: 0 }}
            allowFullScreen
            loading="lazy"
@@ -45,8 +45,8 @@ export default function FuneralInfo() {
         </div>
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2545.580675120931!2d18.192730588151495!3d50.355726020896455!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471111a3382e88ef%3A0xd714bec2d3939ea!2sCmentarz%20Komunalny%20Ku%C5%BAniczka!5e0!3m2!1spl!2spl!4v1743320480568!5m2!1spl!2spl"
-          width="400"
-          height="300"
+          width="300"
+          height="200"
           style={{ border: 0 }}
           allowFullScreen
           loading="lazy"
