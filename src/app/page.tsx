@@ -106,7 +106,6 @@ export default function Home() {
           error={error}
           dialogImage={dialogImage}
           setDialogImage={setDialogImage}
-          galleryImages={galleryImages}
           carouselIndex={carouselIndex}
           setCarouselIndex={setCarouselIndex}
           openPanel={openPanel}
