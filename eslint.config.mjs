@@ -17,13 +17,17 @@ const eslintConfig = [
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
-          args: "none",
-          ignoreRestSiblings: true,
-          vars: "all",
-        },
-        {
-          argsIgnorePattern: "^_",
           varsIgnorePattern: "^_",
+          argsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
+      ],
+      "no-unused-vars": [
+        "warn",
+        {
+          varsIgnorePattern: "^_",
+          argsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
         },
       ],
     },
