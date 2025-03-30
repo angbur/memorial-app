@@ -3,7 +3,7 @@ import clientPromise from "@/lib/mongodb";
 
 export const config = {
   api: {
-    bodyParser: true, // Enable body parser for JSON
+    bodyParser: true,
   },
 };
 

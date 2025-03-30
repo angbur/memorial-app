@@ -81,7 +81,7 @@ export default function MemoryWall({
   return (
     <div className={classes.wrapper}>
       {isFetching ? (
-        <p className="text-center text-gray-500 mt-4">Ładowanie...</p>
+        <p className="text-center text-gray-500 mt-4 mb-20">Ładowanie...</p>
       ) : (
         <>
           {error && <p className={classes.errorText}>{error}</p>}

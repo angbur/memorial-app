@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
@@ -28,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (!image.startsWith("data:image/")) {
           return res.status(400).json({ error: "Invalid image format" });
         }
-        if (Buffer.byteLength(image.split(",")[1], "base64") > 8 * 1024 * 1024) { // 8MB limit
+        if (Buffer.byteLength(image.split(",")[1], "base64") > 8 * 1024 * 1024) {
           return res.status(400).json({ error: "Image size exceeds the limit of 8MB" });
         }
       }

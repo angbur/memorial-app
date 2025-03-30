@@ -35,11 +35,11 @@ export default function Gallery({
   }, []);
 
   return (
-    <div>
+    <div className="mb-10">
       <h1 className="text-2xl font-bold text-gray-700">Przesłane zdjęcia</h1>
       {error && <p className="text-red-500 mt-2">{error}</p>}
       {loading ? (
-        <p className="text-gray-500">Ładowanie zdjęć...</p>
+        <p className="text-gray-500 mb-20">Ładowanie zdjęć...</p>
       ) : galleryImages.length > 0 ? (
         <div
           className="grid gap-4 mt-4"

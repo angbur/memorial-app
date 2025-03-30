@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: "10mb", // Increase the body size limit to handle large Base64 images
+      sizeLimit: "10mb",
     },
   },
 };
