@@ -39,7 +39,7 @@ export default function LeftColumn() {
     <div className={classes.container}>
       <div className={classes.imageWrapper}>
         <Image
-          src="/grandma.png"
+          src="/grandma.jpg"
           alt={`Zdjęcie ${texts.name}`}
           width={200}
           height={200}

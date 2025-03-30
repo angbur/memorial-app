@@ -91,6 +91,7 @@ export default function RightColumn({
       {activeTab === "lightCandle" && (
         <LightCandleForm
           refreshMemoryWall={refreshMemoryWall}
+          setActiveTab={setActiveTab}
         />
       )}
       {activeTab === "candles" && (
